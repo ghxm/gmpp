@@ -5,6 +5,9 @@ from dataclasses import dataclass, field
 from typing import Any, NamedTuple
 
 
+_CONTENT_SENTINEL: dict = {}  # identity-checked in __post_init__
+
+
 class StepRecord(NamedTuple):
     """Record of a single processing step applied to a Document."""
 
@@ -27,7 +30,7 @@ class Document:
     """
 
     input: types.MappingProxyType[str, Any]
-    content: dict[str, Any] = field(default_factory=dict)
+    content: dict[str, Any] = field(default_factory=lambda: _CONTENT_SENTINEL)
     eval: dict[str, Any] = field(
         default_factory=lambda: {"ground_truth": None, "scores": None}
     )
@@ -38,9 +41,10 @@ class Document:
         if isinstance(self.input, dict):
             self.input = types.MappingProxyType(self.input)
 
-        # Initialize content as a mutable copy of input if not provided
-        # (default_factory gives an empty dict, so check for that).
-        if not self.content:
+        # Initialize content as a mutable copy of input if not explicitly
+        # provided. We use an identity check against the default_factory
+        # sentinel rather than truthiness, so that content={} is preserved.
+        if self.content is _CONTENT_SENTINEL:
             self.content = dict(self.input)
 
     # -- serialization --------------------------------------------------------

@@ -1,10 +1,14 @@
-"""Built-in gmpp components (parser wrappers)."""
+"""Built-in gmpp components (parser wrappers).
 
-# Each import triggers @register_component registration.
-# ImportErrors are silenced -- components are only available
-# if the corresponding optional dependency is installed.
+Each import triggers @register_component registration. All built-in
+components use lazy imports for their third-party dependencies (inside
+process()), so these imports should always succeed. The ImportError
+guard is a safety net for future components that might import at
+module level.
+"""
 
 import importlib
+import warnings
 
 _COMPONENT_MODULES = [
     "gmpp.components.trafilatura",
@@ -17,5 +21,9 @@ _COMPONENT_MODULES = [
 for _mod in _COMPONENT_MODULES:
     try:
         importlib.import_module(_mod)
-    except ImportError:
-        pass
+    except ImportError as exc:
+        warnings.warn(
+            f"Failed to import {_mod}: {exc}. "
+            f"The component will not be available.",
+            stacklevel=1,
+        )

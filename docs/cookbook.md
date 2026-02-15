@@ -20,7 +20,7 @@ pipelines = {
 }
 
 for name, pipe in pipelines.items():
-    # Reload docs for each pipeline (evaluation mutates doc.eval)
+    # Reload docs for each pipeline (both pipeline and evaluation mutate docs)
     docs = load_corpus("./htmls/", ground_truth="./gt/")
     results = pipe.run_corpus(docs)
     scores = evaluate_corpus(results, metrics=["rouge_lsum", "levenshtein"])

@@ -36,7 +36,8 @@ foundation for reproducibility in gmpp.
 ## Annotated example
 
 This config runs jusText with German stopwords followed by a trafilatura
-extraction step:
+extraction step. Note that both components write to `"text"`, so trafilatura
+will overwrite the jusText output (gmpp will emit a warning):
 
 ```json
 {

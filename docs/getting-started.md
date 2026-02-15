@@ -2,10 +2,12 @@
 
 ## Installation
 
-Install gmpp with pip:
+gmpp requires **Python >= 3.12**.
+
+Install gmpp from GitHub:
 
 ```bash
-pip install gmpp
+pip install "gmpp @ git+https://github.com/ghxm/gmpp.git"
 ```
 
 gmpp itself only depends on `click`. Parser backends and evaluation metrics are

@@ -6,19 +6,18 @@ in a common pipeline interface with built-in evaluation against ground truth.
 Designed for computational social science researchers who need reproducible,
 comparable text extraction from web pages.
 
-## Install from Github
+## Install
 
 ```bash
-# TODO install from github
+pip install "gmpp @ git+https://github.com/ghxm/gmpp.git"
 ```
 
 Install with specific parser backends:
 
 ```bash
-# TODO install from github, pip not available yet
-pip install "gmpp[trafilatura]"        # just trafilatura
-pip install "gmpp[all]"                # all backends + eval metrics
-pip install "gmpp[dev]"                # everything + pytest, ruff
+pip install "gmpp[trafilatura] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[all] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[dev] @ git+https://github.com/ghxm/gmpp.git"
 ```
 
 ## Quick start
@@ -59,7 +58,7 @@ gmpp show config.json
 
 ## Documentation
 
-Full documentation: [https://ghxm.github.io/gmpp/](https://maxhaag.github.io/gmpp/)
+Full documentation: [https://ghxm.github.io/gmpp/](https://ghxm.github.io/gmpp/)
 
 ## License
 

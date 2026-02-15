@@ -20,7 +20,7 @@ class Newspaper(Component):
 
     def process(self, doc: Document) -> Document:
         try:
-            from newspaper import Article
+            from newspaper import Article, Config
         except ImportError:
             raise ImportError(
                 "newspaper4k is required for the Newspaper component. "
@@ -32,10 +32,14 @@ class Newspaper(Component):
             doc.content[self.output_field] = ""
             return doc
 
+        config = Config()
+        config.fetch_images = False
+        config.language = self.language
+
         url = doc.input.get("url", "")
         article = Article(
             url if url else "http://example.com",
-            language=self.language,
+            config=config,
         )
         article.download(input_html=html)
         article.parse()

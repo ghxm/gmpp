@@ -1,0 +1,38 @@
+# gmpp documentation site
+# Requires: pip install mkdocs-material
+# Build:    mkdocs build
+# Serve:    mkdocs serve
+
+site_name: gmpp
+site_description: Lightweight framework for comparing HTML content extraction strategies
+repo_url: https://github.com/maxhaag/gmpp
+theme:
+  name: material
+  palette:
+    primary: indigo
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Concepts:
+    - Document: concepts/document.md
+    - Component: concepts/component.md
+    - Pipeline: concepts/pipeline.md
+    - Registry: concepts/registry.md
+  - Components Reference: components.md
+  - Metrics Reference: metrics.md
+  - CLI Reference: cli.md
+  - Config Format: config.md
+  - Cookbook: cookbook.md
+  - API Reference: api.md
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
+plugins:
+  - search

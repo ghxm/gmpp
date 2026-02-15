@@ -40,7 +40,7 @@ results/
 Evaluate pipeline results against ground truth.
 
 ```bash
-gmpp eval <output_dir> --ground-truth <dir|csv> [--metrics rouge_lsum,levenshtein]
+gmpp eval <output_dir> --ground-truth <dir> [--metrics rouge_lsum,levenshtein]
 ```
 
 | Option           | Required | Description                                        |
@@ -66,7 +66,7 @@ results/
 
 ## gmpp list
 
-List all registered components and their parameters.
+List all registered components and metrics.
 
 ```bash
 gmpp list

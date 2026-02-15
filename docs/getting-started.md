@@ -15,20 +15,20 @@ optional dependencies. Install what you need:
 
 ```bash
 # Individual backends
-pip install "gmpp[trafilatura]"
-pip install "gmpp[readability]"
-pip install "gmpp[justext]"
-pip install "gmpp[newspaper]"
-pip install "gmpp[inscriptis]"
+pip install "gmpp[trafilatura] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[readability] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[justext] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[newspaper] @ git+https://github.com/ghxm/gmpp.git"
+pip install "gmpp[inscriptis] @ git+https://github.com/ghxm/gmpp.git"
 
 # Evaluation metrics (ROUGE, Levenshtein)
-pip install "gmpp[eval]"
+pip install "gmpp[eval] @ git+https://github.com/ghxm/gmpp.git"
 
 # Everything
-pip install "gmpp[all]"
+pip install "gmpp[all] @ git+https://github.com/ghxm/gmpp.git"
 
 # Development (all backends + eval + pytest + ruff)
-pip install "gmpp[dev]"
+pip install "gmpp[dev] @ git+https://github.com/ghxm/gmpp.git"
 ```
 
 ## Your first pipeline
@@ -86,6 +86,8 @@ save_results(results, "./output/", config=pipe.to_config())
 If you have ground truth text, you can score extraction quality:
 
 ```python
+from gmpp import Pipeline
+from gmpp.components.trafilatura import Trafilatura
 from gmpp.io import load_corpus
 from gmpp.eval import evaluate_corpus
 

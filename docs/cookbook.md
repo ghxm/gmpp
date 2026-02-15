@@ -61,6 +61,9 @@ class ScriptRemover(Component):
 
 
 # Use it in a pipeline before the extractor
+from gmpp import Pipeline
+from gmpp.components.trafilatura import Trafilatura
+
 pipe = Pipeline([
     ScriptRemover(),
     Trafilatura(favor_precision=True),

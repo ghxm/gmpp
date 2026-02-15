@@ -5,7 +5,7 @@
 
 site_name: gmpp
 site_description: Lightweight framework for comparing HTML content extraction strategies
-repo_url: https://github.com/maxhaag/gmpp
+repo_url: https://github.com/ghxm/gmpp
 theme:
   name: material
   palette:

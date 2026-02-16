@@ -88,6 +88,21 @@ class TestPipelineCorpus:
         assert len(overwrite_warnings) == 1
 
 
+    def test_run_corpus_parallel(self) -> None:
+        pipe = Pipeline([AddTextComponent(value="parallel"), AddLangComponent(lang="de")])
+        docs = [
+            Document(input={"html": "<p>a</p>"}),
+            Document(input={"html": "<p>b</p>"}),
+            Document(input={"html": "<p>c</p>"}),
+        ]
+        results = pipe.run_corpus(docs, n_jobs=2)
+        assert len(results) == 3
+        for doc in results:
+            assert doc.content["text"] == "parallel"
+            assert doc.content["lang"] == "de"
+            assert len(doc.history) == 2
+
+
 class TestPipelineSerialization:
     def test_to_config_from_config_round_trip(self) -> None:
         pipe = Pipeline([AddTextComponent(value="hi"), AddLangComponent(lang="de")])

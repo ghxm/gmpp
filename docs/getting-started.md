@@ -74,6 +74,9 @@ docs = load_corpus("./htmls/")
 pipe = Pipeline([Trafilatura()])
 results = pipe.run_corpus(docs)
 
+# Or run in parallel across 4 worker processes
+results = pipe.run_corpus(docs, n_jobs=4)
+
 # Save results to disk
 save_results(results, "./output/", config=pipe.to_config())
 ```

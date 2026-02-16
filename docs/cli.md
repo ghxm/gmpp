@@ -17,6 +17,7 @@ gmpp run <config.json> --input <dir|manifest.csv> --output <dir>
 | `config.json`   | Yes      | Path to the pipeline config file.                   |
 | `--input`       | Yes      | Directory of `.html` files or a CSV manifest.       |
 | `--output`      | Yes      | Output directory for results and config sidecar.    |
+| `--parallelism` | No       | Number of worker processes (default: 1).            |
 
 **Example**:
 
@@ -48,6 +49,7 @@ gmpp eval <output_dir> --ground-truth <dir> [--metrics rouge_lsum,levenshtein]
 | `output_dir`     | Yes      | Directory containing pipeline results.             |
 | `--ground-truth` | No       | Directory of `.txt` ground truth files.            |
 | `--metrics`      | No       | Comma-separated metric names (default: all).       |
+| `--parallelism`  | No       | Number of worker processes (default: 1).           |
 
 **Example**:
 

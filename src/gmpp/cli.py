@@ -26,7 +26,11 @@ def cli() -> None:
     "--output", "output_path", required=True, type=click.Path(),
     help="Output directory for results.",
 )
-def run(config: str, input_path: str, output_path: str) -> None:
+@click.option(
+    "--parallelism", "n_jobs", default=1, type=int,
+    help="Number of worker processes for parallel execution (default: 1).",
+)
+def run(config: str, input_path: str, output_path: str, n_jobs: int) -> None:
     """Run a pipeline on a corpus.
 
     CONFIG is a JSON file describing the pipeline configuration.
@@ -53,7 +57,7 @@ def run(config: str, input_path: str, output_path: str) -> None:
     component_names = [c.name for c in pipe.components]
     click.echo(f"Pipeline: {' -> '.join(component_names)}")
 
-    results = pipe.run_corpus(docs)
+    results = pipe.run_corpus(docs, n_jobs=n_jobs)
 
     save_results(results, output_path, config=config_data)
     click.echo(f"Results saved to {output_path}")
@@ -73,7 +77,11 @@ def run(config: str, input_path: str, output_path: str) -> None:
     "--metrics", "metrics_str", default=None,
     help="Comma-separated list of metrics to compute (default: all).",
 )
-def eval_cmd(output_dir: str, ground_truth: str | None, metrics_str: str | None) -> None:
+@click.option(
+    "--parallelism", "n_jobs", default=1, type=int,
+    help="Number of worker processes for parallel execution (default: 1).",
+)
+def eval_cmd(output_dir: str, ground_truth: str | None, metrics_str: str | None, n_jobs: int) -> None:
     """Evaluate pipeline results against ground truth.
 
     OUTPUT_DIR is the directory produced by 'gmpp run'.
@@ -100,7 +108,7 @@ def eval_cmd(output_dir: str, ground_truth: str | None, metrics_str: str | None)
         metrics = [m.strip() for m in metrics_str.split(",") if m.strip()]
 
     try:
-        results = evaluate_corpus(docs, metrics=metrics)
+        results = evaluate_corpus(docs, metrics=metrics, n_jobs=n_jobs)
     except (ValueError, KeyError) as exc:
         click.echo(f"Evaluation error: {exc}", err=True)
         sys.exit(1)

@@ -220,6 +220,20 @@ class TestEvaluateCorpus:
         ids = [entry["doc_id"] for entry in result["per_doc"]]
         assert ids == ["doc1", "doc2"]
 
+    def test_parallel(self):
+        docs = [
+            self._make_doc("a", "hello world", "hello world"),
+            self._make_doc("b", "foo bar", "foo bar baz"),
+            self._make_doc("c", "x y z", "x y z"),
+        ]
+        result = evaluate_corpus(docs, metrics=["token_f1"], n_jobs=2)
+
+        assert len(result["per_doc"]) == 3
+        assert "token_f1" in result["aggregate"]
+        # Scores should be propagated back to original docs.
+        for doc in docs:
+            assert "token_f1" in doc.eval["scores"]
+
     def test_perfect_scores(self):
         docs = [
             self._make_doc("a", "same text", "same text"),

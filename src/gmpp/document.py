@@ -47,6 +47,18 @@ class Document:
         if self.content is _CONTENT_SENTINEL:
             self.content = dict(self.input)
 
+    # -- pickling -------------------------------------------------------------
+
+    def __getstate__(self) -> dict[str, Any]:
+        state = self.__dict__.copy()
+        # MappingProxyType is not picklable; store as a plain dict.
+        state["input"] = dict(self.input)
+        return state
+
+    def __setstate__(self, state: dict[str, Any]) -> None:
+        state["input"] = types.MappingProxyType(state["input"])
+        self.__dict__.update(state)
+
     # -- serialization --------------------------------------------------------
 
     def to_dict(self) -> dict[str, Any]:

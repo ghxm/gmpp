@@ -3,11 +3,17 @@
 import sys
 import time
 import warnings
+from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime
 from typing import Any
 
 from gmpp.component import Component
 from gmpp.document import Document, StepRecord
+
+
+def _run_single(pipeline: "Pipeline", doc: Document) -> Document:
+    """Top-level helper for ProcessPoolExecutor (must be picklable)."""
+    return pipeline.run(doc)
 
 
 class Pipeline:
@@ -46,12 +52,18 @@ class Pipeline:
             doc.history.append(record)
         return doc
 
-    def run_corpus(self, docs: list[Document]) -> list[Document]:
+    def run_corpus(
+        self, docs: list[Document], n_jobs: int = 1,
+    ) -> list[Document]:
         """Run a list of Documents through the pipeline.
 
         Calls ``setup(docs)`` on each component first, then processes each
         document via ``run()``. Warns if a component overwrites a field
         previously written by another component.
+
+        Args:
+            docs: Documents to process.
+            n_jobs: Number of worker processes. 1 (default) runs sequentially.
         """
         # Setup phase
         for component in self.components:
@@ -71,6 +83,9 @@ class Pipeline:
             fields_written[field] = component.name
 
         # Processing phase
+        if n_jobs > 1:
+            with ProcessPoolExecutor(max_workers=n_jobs) as executor:
+                return list(executor.map(_run_single, [self] * len(docs), docs))
         return [self.run(doc) for doc in docs]
 
     # -- serialization --------------------------------------------------------

@@ -1,6 +1,7 @@
 """Evaluation metrics and corpus-level scoring for gmpp."""
 
 import statistics
+from concurrent.futures import ProcessPoolExecutor
 
 from gmpp.document import Document
 from gmpp.registry import get_metric, list_metrics, register_metric
@@ -186,10 +187,22 @@ def evaluate(
     return doc
 
 
+def _evaluate_single(
+    doc: Document,
+    metrics: list[str] | None,
+    prediction_field: str,
+) -> tuple[Document, dict]:
+    """Top-level helper for ProcessPoolExecutor (must be picklable)."""
+    evaluate(doc, metrics=metrics, prediction_field=prediction_field)
+    doc_id = doc.input.get("doc_id", None)
+    return doc, {"doc_id": doc_id, "scores": dict(doc.eval["scores"])}
+
+
 def evaluate_corpus(
     docs: list[Document],
     metrics: list[str] | None = None,
     prediction_field: str = "text",
+    n_jobs: int = 1,
 ) -> dict:
     """Evaluate a list of Documents and aggregate scores.
 
@@ -200,6 +213,7 @@ def evaluate_corpus(
         docs: Documents to evaluate (each must have ground truth set).
         metrics: Metric names to compute.  If *None*, all registered metrics.
         prediction_field: Key in ``doc.content`` for predicted text.
+        n_jobs: Number of worker processes. 1 (default) runs sequentially.
 
     Returns:
         A dict with keys ``"per_doc"`` (list of per-document score dicts) and
@@ -207,10 +221,23 @@ def evaluate_corpus(
     """
     per_doc: list[dict] = []
 
-    for doc in docs:
-        evaluate(doc, metrics=metrics, prediction_field=prediction_field)
-        doc_id = doc.input.get("doc_id", None)
-        per_doc.append({"doc_id": doc_id, "scores": dict(doc.eval["scores"])})
+    if n_jobs > 1:
+        with ProcessPoolExecutor(max_workers=n_jobs) as executor:
+            results = list(executor.map(
+                _evaluate_single,
+                docs,
+                [metrics] * len(docs),
+                [prediction_field] * len(docs),
+            ))
+        for i, (_updated_doc, entry) in enumerate(results):
+            # Propagate scores back to the original docs (order preserved).
+            docs[i].eval["scores"] = entry["scores"]
+            per_doc.append(entry)
+    else:
+        for doc in docs:
+            evaluate(doc, metrics=metrics, prediction_field=prediction_field)
+            doc_id = doc.input.get("doc_id", None)
+            per_doc.append({"doc_id": doc_id, "scores": dict(doc.eval["scores"])})
 
     # Aggregate across the corpus.
     if not per_doc:

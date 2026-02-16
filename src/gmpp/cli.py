@@ -10,7 +10,7 @@ import click
 
 @click.group()
 def cli() -> None:
-    """gmpp -- lightweight framework for comparing HTML content extraction strategies."""
+    """gmpp -- Python package for comparing HTML parsing strategies."""
 
 
 # -- gmpp run -----------------------------------------------------------------

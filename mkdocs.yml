@@ -4,7 +4,7 @@
 # Serve:    mkdocs serve
 
 site_name: gmpp
-site_description: Lightweight framework for comparing HTML content extraction strategies
+site_description: Python package for comparing HTML parsing strategies
 repo_url: https://github.com/ghxm/gmpp
 theme:
   name: material

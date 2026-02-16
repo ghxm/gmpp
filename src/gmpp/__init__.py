@@ -1,4 +1,4 @@
-"""gmpp — lightweight framework for comparing HTML content extraction strategies."""
+"""gmpp -- Python package for comparing HTML parsing strategies."""
 
 from gmpp.document import Document, StepRecord
 from gmpp.component import Component

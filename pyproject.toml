@@ -1,7 +1,7 @@
 [project]
 name = "gmpp"
 version = "0.1.0"
-description = "Lightweight framework for comparing HTML content extraction strategies"
+description = "Python package for comparing HTML parsing strategies"
 requires-python = ">=3.12"
 dependencies = ["click"]
 readme = "README.md"

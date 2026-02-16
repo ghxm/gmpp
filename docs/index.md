@@ -1,6 +1,6 @@
 # gmpp
 
-**Lightweight framework for comparing HTML content extraction strategies.**
+**Python package for comparing HTML parsing strategies.**
 
 gmpp wraps different HTML-to-text parsers (trafilatura, readability, jusText,
 newspaper4k, inscriptis) in a common pipeline interface. You build pipelines

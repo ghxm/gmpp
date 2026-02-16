@@ -42,6 +42,10 @@ class Newspaper(Component):
             config=config,
         )
         article.download(input_html=html)
+        # newspaper4k's parse() unconditionally calls fetch_images() which
+        # triggers network requests regardless of config.fetch_images.
+        # Monkey-patch it out to avoid slow/failing HTTP requests.
+        article.fetch_images = lambda: None
         article.parse()
 
         doc.content[self.output_field] = article.text

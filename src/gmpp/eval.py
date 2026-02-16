@@ -20,8 +20,11 @@ def rouge_lsum(predicted: str, reference: str) -> float:
             "Install it with: pip install gmpp[eval]"
         ) from None
 
-    scorer = rouge_scorer.RougeScorer(["rougeLsum"], use_stemmer=True)
-    scores = scorer.score(reference, predicted)
+    if not hasattr(rouge_lsum, "_scorer"):
+        rouge_lsum._scorer = rouge_scorer.RougeScorer(
+            ["rougeLsum"], use_stemmer=True
+        )
+    scores = rouge_lsum._scorer.score(reference, predicted)
     return scores["rougeLsum"].fmeasure
 
 

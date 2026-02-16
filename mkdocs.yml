@@ -13,6 +13,8 @@ theme:
     primary: white
   favicon: null
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - content.code.copy
@@ -24,12 +26,13 @@ nav:
     - Component: concepts/component.md
     - Pipeline: concepts/pipeline.md
     - Registry: concepts/registry.md
-  - Components Reference: components.md
-  - Metrics Reference: metrics.md
-  - CLI Reference: cli.md
-  - Config Format: config.md
+  - Reference:
+    - Components: components.md
+    - Metrics: metrics.md
+    - CLI: cli.md
+    - Config Format: config.md
+    - API: api.md
   - Cookbook: cookbook.md
-  - API Reference: api.md
 extra_css:
   - stylesheets/extra.css
 markdown_extensions:

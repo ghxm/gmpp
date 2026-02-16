@@ -1,10 +1,9 @@
 # gmpp
 
 Python package for comparing HTML parsing strategies.
-Wrap different parsers (trafilatura, readability, jusText, newspaper4k, inscriptis)
+Wrap different parsers (e.g., the built-in trafilatura, readability, jusText, newspaper4k, inscriptis parsers)
 in a common pipeline interface with built-in evaluation against ground truth.
-Designed for computational social science researchers who need reproducible,
-comparable text extraction from web pages.
+
 
 ## Install
 

@@ -46,7 +46,14 @@ class Newspaper(Component):
         # triggers network requests regardless of config.fetch_images.
         # Monkey-patch it out to avoid slow/failing HTTP requests.
         article.fetch_images = lambda: None
-        article.parse()
+
+        try:
+            article.parse()
+        except Exception:
+            # newspaper4k can crash on malformed HTML (e.g. NoneType in
+            # author extraction).  Return empty text rather than aborting.
+            doc.content[self.output_field] = ""
+            return doc
 
         doc.content[self.output_field] = article.text
 

@@ -51,6 +51,26 @@ Harmonic mean of token precision and token recall.
 
 **Requires**: No additional dependencies.
 
+### jaccard
+
+Jaccard similarity over token sets: `|A & B| / |A | B|`. Measures the
+proportion of shared unique tokens between predicted and reference text.
+Unlike token F1, Jaccard treats precision and recall symmetrically.
+
+**Range**: 0.0 to 1.0 (higher is better).
+
+**Requires**: No additional dependencies.
+
+### cosine
+
+Cosine similarity over token frequency vectors. Computes the angle between
+bag-of-words TF vectors, making it sensitive to token frequency distributions
+rather than just token presence.
+
+**Range**: 0.0 to 1.0 (higher is better).
+
+**Requires**: No additional dependencies.
+
 ## Using metrics
 
 ### Document-level evaluation
@@ -89,7 +109,7 @@ print(scores["aggregate"])
 Pass `metrics=None` (or omit the argument) to compute all registered metrics:
 
 ```python
-evaluate(doc)  # computes rouge_lsum, levenshtein, token_precision, token_recall, token_f1
+evaluate(doc)  # computes all registered metrics (rouge_lsum, levenshtein, token_*, jaccard, cosine)
 ```
 
 ## Writing a custom metric
@@ -100,22 +120,18 @@ can be registered as a metric:
 ```python
 from gmpp.registry import register_metric
 
-@register_metric("word_overlap")
-def word_overlap(predicted: str, reference: str) -> float:
-    """Jaccard similarity of word sets."""
-    pred_words = set(predicted.lower().split())
-    ref_words = set(reference.lower().split())
-    if not pred_words and not ref_words:
-        return 1.0
-    intersection = pred_words & ref_words
-    union = pred_words | ref_words
-    return len(intersection) / len(union)
+@register_metric("char_compression")
+def char_compression(predicted: str, reference: str) -> float:
+    """Ratio of predicted length to reference length (compression measure)."""
+    if len(reference) == 0:
+        return 0.0
+    return min(len(predicted) / len(reference), 1.0)
 ```
 
 After registration, use it by name like any built-in metric:
 
 ```python
-evaluate(doc, metrics=["word_overlap"])
+evaluate(doc, metrics=["char_compression"])
 ```
 
 Document your convention for the return value: whether higher is better

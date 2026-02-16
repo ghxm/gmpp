@@ -85,6 +85,45 @@ def token_f1(predicted: str, reference: str) -> float:
     return 2 * p * r / (p + r)
 
 
+@register_metric("jaccard")
+def jaccard(predicted: str, reference: str) -> float:
+    """Jaccard similarity over token sets (|A & B| / |A | B|)."""
+    pred_tokens = set(predicted.split())
+    ref_tokens = set(reference.split())
+
+    if not pred_tokens and not ref_tokens:
+        return 1.0
+
+    intersection = pred_tokens & ref_tokens
+    union = pred_tokens | ref_tokens
+    return len(intersection) / len(union)
+
+
+@register_metric("cosine")
+def cosine(predicted: str, reference: str) -> float:
+    """Cosine similarity over token frequency vectors."""
+    from collections import Counter
+    import math
+
+    pred_counts = Counter(predicted.split())
+    ref_counts = Counter(reference.split())
+
+    if not pred_counts and not ref_counts:
+        return 1.0
+    if not pred_counts or not ref_counts:
+        return 0.0
+
+    all_tokens = set(pred_counts) | set(ref_counts)
+    dot = sum(pred_counts[t] * ref_counts[t] for t in all_tokens)
+    norm_pred = math.sqrt(sum(c * c for c in pred_counts.values()))
+    norm_ref = math.sqrt(sum(c * c for c in ref_counts.values()))
+
+    if norm_pred == 0.0 or norm_ref == 0.0:
+        return 0.0
+
+    return dot / (norm_pred * norm_ref)
+
+
 # -- Document-level and corpus-level evaluation --------------------------------
 
 

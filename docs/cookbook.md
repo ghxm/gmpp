@@ -296,19 +296,60 @@ class PageRouter(Component):
         return doc
 ```
 
-Use it in a pipeline like any other component:
+Since the router is a regular component, it composes naturally with other
+pipeline steps. For example, you can add a common preprocessing step before
+the router and a postprocessing step after it:
 
 ```python
+import re
+
 from gmpp import Pipeline
+from gmpp.component import Component
+from gmpp.document import Document
+from gmpp.registry import register_component
 from gmpp.io import load_corpus
 from gmpp.eval import evaluate_corpus
 
-pipe = Pipeline([PageRouter(
-    article_extractor="trafilatura",
-    forum_extractor="readability",
-    listing_extractor="inscriptis",
-    article_params={"favor_precision": True},
-)])
+
+@register_component("script_remover")
+class ScriptRemover(Component):
+    """Remove script and style tags before extraction."""
+
+    output_field = "html"
+
+    def process(self, doc: Document) -> Document:
+        html = doc.content.get("html", "")
+        html = re.sub(r"<script[^>]*>.*?</script>", "", html, flags=re.DOTALL)
+        html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL)
+        doc.content[self.output_field] = html
+        return doc
+
+
+@register_component("whitespace_normalizer")
+class WhitespaceNormalizer(Component):
+    """Collapse runs of whitespace in extracted text."""
+
+    output_field = "text"
+
+    def process(self, doc: Document) -> Document:
+        text = doc.content.get("text", "")
+        text = re.sub(r"\n{3,}", "\n\n", text)
+        text = re.sub(r"[ \t]+", " ", text)
+        doc.content[self.output_field] = text.strip()
+        return doc
+
+
+# 1. Clean HTML  ->  2. Route to best extractor  ->  3. Normalize output
+pipe = Pipeline([
+    ScriptRemover(),
+    PageRouter(
+        article_extractor="trafilatura",
+        forum_extractor="readability",
+        listing_extractor="inscriptis",
+        article_params={"favor_precision": True},
+    ),
+    WhitespaceNormalizer(),
+])
 
 docs = load_corpus("./htmls/", ground_truth="./gt/")
 results = pipe.run_corpus(docs)
@@ -320,6 +361,10 @@ for doc in results:
 # Evaluate as usual
 scores = evaluate_corpus(results, metrics=["rouge_lsum"])
 ```
+
+Each step reads from and writes to `doc.content`, so they chain naturally.
+The preprocessing and postprocessing steps run for every document, while
+the router picks a different extractor per page.
 
 A few things to note:
 

@@ -8,8 +8,10 @@ Note: WCEB used older library versions; scores will differ. The goal is to
 verify wrappers work correctly and produce scores in the right ballpark.
 
 Usage:
-    python run_wceb.py                  # full corpus (3,985 docs, slow)
-    python run_wceb.py --sample 500     # stratified sample (faster)
+    python run_wceb.py                              # full corpus (3,985 docs, slow)
+    python run_wceb.py --sample 500                 # stratified sample (faster)
+    python run_wceb.py --parallelism 8              # parallel with 8 workers
+    python run_wceb.py --sample 500 --parallelism 8 # both
 """
 
 import json
@@ -32,7 +34,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 from gmpp.document import Document
 from gmpp.pipeline import Pipeline
 from gmpp import create_component
-from gmpp.eval import evaluate
+from gmpp.eval import evaluate, evaluate_corpus
 import gmpp.components  # noqa: F401 -- trigger registration
 
 # ---------------------------------------------------------------------------
@@ -137,13 +139,20 @@ def main() -> None:
         idx = sys.argv.index("--sample")
         sample_size = int(sys.argv[idx + 1])
 
+    # Parse --parallelism argument
+    n_jobs = 1
+    if "--parallelism" in sys.argv:
+        idx = sys.argv.index("--parallelism")
+        n_jobs = int(sys.argv[idx + 1])
+
     log("Loading WCEB corpus...")
     docs = load_wceb_corpus(sample_size=sample_size)
     log(f"Loaded {len(docs)} documents from {len(DATASETS)} datasets.")
     if sample_size:
-        log(f"(stratified sample of {sample_size} requested)\n")
-    else:
-        log("")
+        log(f"(stratified sample of {sample_size} requested)")
+    if n_jobs > 1:
+        log(f"(parallel mode: {n_jobs} workers)")
+    log("")
 
     results = {}
     for name in EXTRACTORS:
@@ -158,17 +167,23 @@ def main() -> None:
             fresh.eval["ground_truth"] = d.eval["ground_truth"]
             corpus.append(fresh)
 
-        processed = pipeline.run_corpus(corpus)
+        processed = pipeline.run_corpus(corpus, n_jobs=n_jobs)
         log(f"  Extraction done. Evaluating ({len(processed)} docs)...")
 
-        # Evaluate per-doc with progress tracking (ROUGE is slow)
         eval_start = time.time()
-        progress_interval = max(100, len(processed) // 10)
-        for i, d in enumerate(processed):
-            evaluate(d, metrics=["rouge_lsum", "levenshtein"])
-            if (i + 1) % progress_interval == 0:
-                elapsed = time.time() - eval_start
-                log(f"    ... {i + 1}/{len(processed)} evaluated ({elapsed:.0f}s)")
+        if n_jobs > 1:
+            evaluate_corpus(
+                processed,
+                metrics=["rouge_lsum", "levenshtein"],
+                n_jobs=n_jobs,
+            )
+        else:
+            progress_interval = max(100, len(processed) // 10)
+            for i, d in enumerate(processed):
+                evaluate(d, metrics=["rouge_lsum", "levenshtein"])
+                if (i + 1) % progress_interval == 0:
+                    elapsed = time.time() - eval_start
+                    log(f"    ... {i + 1}/{len(processed)} evaluated ({elapsed:.0f}s)")
 
         # Aggregate
         rouge_vals = [d.eval["scores"]["rouge_lsum"] for d in processed]

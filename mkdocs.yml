@@ -10,7 +10,8 @@ repo_url: https://github.com/ghxm/gmpp
 theme:
   name: material
   palette:
-    primary: indigo
+    primary: white
+  favicon: null
   features:
     - navigation.sections
     - navigation.expand
@@ -29,6 +30,8 @@ nav:
   - Config Format: config.md
   - Cookbook: cookbook.md
   - API Reference: api.md
+extra_css:
+  - stylesheets/extra.css
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.superfences

@@ -31,7 +31,13 @@ def rouge_lsum(predicted: str, reference: str) -> float:
 
 @register_metric("levenshtein")
 def levenshtein(predicted: str, reference: str) -> float:
-    """Normalized Levenshtein similarity (1 - distance / max_len)."""
+    """Normalized word-level Levenshtein similarity.
+
+    Tokenizes both strings into whitespace-delimited words before computing
+    Levenshtein distance.  This matches the methodology used by the WCEB
+    benchmark (Bevendorff et al., SIGIR 2023) and avoids penalizing
+    whitespace-only differences between extractors.
+    """
     try:
         import Levenshtein as lev
     except ImportError:
@@ -40,11 +46,14 @@ def levenshtein(predicted: str, reference: str) -> float:
             "Install it with: pip install gmpp[eval]"
         ) from None
 
-    if len(predicted) == 0 and len(reference) == 0:
+    pred_tokens = predicted.split()
+    ref_tokens = reference.split()
+
+    if len(pred_tokens) == 0 and len(ref_tokens) == 0:
         return 1.0
 
-    dist = lev.distance(predicted, reference)
-    max_len = max(len(predicted), len(reference))
+    dist = lev.distance(pred_tokens, ref_tokens)
+    max_len = max(len(pred_tokens), len(ref_tokens))
     return 1.0 - dist / max_len
 
 

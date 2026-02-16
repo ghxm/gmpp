@@ -39,22 +39,26 @@ class TestRougeSum:
 
 class TestLevenshtein:
     def test_identical(self):
-        assert levenshtein("abc", "abc") == pytest.approx(1.0)
+        assert levenshtein("hello world", "hello world") == pytest.approx(1.0)
 
     def test_completely_different(self):
-        score = levenshtein("aaa", "bbb")
+        score = levenshtein("aaa bbb ccc", "xxx yyy zzz")
         assert score == pytest.approx(0.0)
 
     def test_both_empty(self):
         assert levenshtein("", "") == pytest.approx(1.0)
 
     def test_one_empty(self):
-        assert levenshtein("", "abc") == pytest.approx(0.0)
-        assert levenshtein("abc", "") == pytest.approx(0.0)
+        assert levenshtein("", "hello world") == pytest.approx(0.0)
+        assert levenshtein("hello world", "") == pytest.approx(0.0)
 
     def test_partial(self):
-        # "abc" vs "abd" -> distance 1, max_len 3 -> similarity 2/3
-        assert levenshtein("abc", "abd") == pytest.approx(2.0 / 3.0)
+        # "hello world foo" vs "hello world bar" -> 3 tokens, 1 different
+        assert levenshtein("hello world foo", "hello world bar") == pytest.approx(2.0 / 3.0)
+
+    def test_whitespace_insensitive(self):
+        assert levenshtein("hello  world", "hello world") == pytest.approx(1.0)
+        assert levenshtein("hello\n\nworld", "hello world") == pytest.approx(1.0)
 
 
 class TestTokenPrecision:

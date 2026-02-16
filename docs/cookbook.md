@@ -108,8 +108,7 @@ Requirements:
 ## Run a parameter sweep (multiverse layer)
 
 gmpp handles single-pipeline execution. A parameter sweep is an external loop
-that creates multiple pipeline configs and runs each one. This is what the
-architecture calls the "multiverse layer".
+that creates multiple pipeline configs and runs each one. This allows for a "multiverse layer" over the core pipeline execution, where you can systematically explore different parameter combinations and compare their results.
 
 ### Python approach
 

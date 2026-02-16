@@ -32,7 +32,14 @@ nav:
     - CLI: cli.md
     - Config Format: config.md
     - API: api.md
-  - Cookbook: cookbook.md
+  - Cookbook:
+    - cookbook/index.md
+    - Compare Extractors: cookbook/compare-extractors.md
+    - Preprocessing: cookbook/preprocessing.md
+    - Custom Component: cookbook/custom-component.md
+    - Parameter Sweep: cookbook/parameter-sweep.md
+    - Page Router: cookbook/page-router.md
+    - Reproduce WCEB: cookbook/reproduce-wceb.md
 extra_css:
   - stylesheets/extra.css
 markdown_extensions:
@@ -57,4 +64,4 @@ plugins:
           - config.md
           - api.md
         Cookbook:
-          - cookbook.md
+          - cookbook/*.md

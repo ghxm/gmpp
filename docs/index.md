@@ -27,4 +27,4 @@ to do that.
 
 - [Getting Started](getting-started.md) -- install gmpp and run your first pipeline.
 - [Concepts](concepts/document.md) -- understand how Documents, Components, and Pipelines work.
-- [Cookbook](cookbook.md) -- recipes for common tasks.
+- [Cookbook](cookbook/index.md) -- recipes for common tasks.

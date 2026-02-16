@@ -4,6 +4,7 @@
 # Serve:    mkdocs serve
 
 site_name: gmpp
+site_url: https://ghxm.github.io/gmpp/
 site_description: Python package for comparing HTML parsing strategies
 repo_url: https://github.com/ghxm/gmpp
 theme:
@@ -36,3 +37,18 @@ markdown_extensions:
       permalink: true
 plugins:
   - search
+  - llmstxt:
+      full_output: llms-full.txt
+      sections:
+        Getting Started:
+          - getting-started.md
+        Concepts:
+          - concepts/*.md
+        Reference:
+          - components.md
+          - metrics.md
+          - cli.md
+          - config.md
+          - api.md
+        Cookbook:
+          - cookbook.md

@@ -15,7 +15,7 @@ newspaper = ["newspaper4k"]
 inscriptis = ["inscriptis"]
 eval = ["rouge-score", "python-Levenshtein"]
 all = ["gmpp[trafilatura,readability,justext,newspaper,inscriptis,eval]"]
-dev = ["gmpp[all]", "pytest", "ruff", "mkdocs-llmstxt"]
+dev = ["gmpp[all]", "pytest", "ruff", "mkdocs-llmstxt", "mkdocs-terminal"]
 
 [project.scripts]
 gmpp = "gmpp.cli:cli"

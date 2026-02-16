@@ -1,5 +1,5 @@
 # gmpp documentation site
-# Requires: pip install mkdocs-terminal
+# Requires: pip install mkdocs-material
 # Build:    mkdocs build
 # Serve:    mkdocs serve
 
@@ -8,8 +8,13 @@ site_url: https://ghxm.github.io/gmpp/
 site_description: Python package for comparing HTML parsing strategies
 repo_url: https://github.com/ghxm/gmpp
 theme:
-  name: terminal
-  palette: lightyear
+  name: material
+  palette:
+    primary: indigo
+  features:
+    - navigation.sections
+    - navigation.expand
+    - content.code.copy
 nav:
   - Home: index.md
   - Getting Started: getting-started.md

@@ -33,7 +33,6 @@ nav:
     - Config Format: config.md
     - API: api.md
   - Cookbook:
-    - cookbook/index.md
     - Compare Extractors: cookbook/compare-extractors.md
     - Preprocessing: cookbook/preprocessing.md
     - Custom Component: cookbook/custom-component.md

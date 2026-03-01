@@ -1,5 +1,5 @@
 # gmpp documentation site
-# Requires: pip install mkdocs-material
+# Requires: pip install mkdocs-openstage-theme
 # Build:    mkdocs build
 # Serve:    mkdocs serve
 
@@ -8,16 +8,10 @@ site_url: https://ghxm.github.io/gmpp/
 site_description: Python package for comparing HTML parsing strategies
 repo_url: https://github.com/ghxm/gmpp
 theme:
-  name: material
-  palette:
-    primary: white
-  favicon: null
-  features:
-    - navigation.tabs
-    - navigation.tabs.sticky
-    - navigation.sections
-    - navigation.expand
-    - content.code.copy
+  name: openstage
+  nav_links:
+    - title: GitHub
+      url: https://github.com/ghxm/gmpp
 nav:
   - Home: index.md
   - Getting Started: getting-started.md
@@ -39,11 +33,7 @@ nav:
     - Parameter Sweep: cookbook/parameter-sweep.md
     - Page Router: cookbook/page-router.md
     - Reproduce WCEB: cookbook/reproduce-wceb.md
-extra_css:
-  - stylesheets/extra.css
 markdown_extensions:
-  - pymdownx.highlight
-  - pymdownx.superfences
   - admonition
   - toc:
       permalink: true

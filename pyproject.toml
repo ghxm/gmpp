@@ -15,7 +15,7 @@ newspaper = ["newspaper4k"]
 inscriptis = ["inscriptis"]
 eval = ["rouge-score", "python-Levenshtein"]
 all = ["gmpp[trafilatura,readability,justext,newspaper,inscriptis,eval]"]
-dev = ["gmpp[all]", "pytest", "ruff", "mkdocs-llmstxt", "mkdocs-material"]
+dev = ["gmpp[all]", "pytest", "ruff", "mkdocs-llmstxt", "mkdocs-openstage-theme @ git+https://github.com/openstage-eu/mkdocs-openstage-theme.git"]
 
 [project.scripts]
 gmpp = "gmpp.cli:cli"
@@ -23,6 +23,9 @@ gmpp = "gmpp.cli:cli"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/gmpp"]

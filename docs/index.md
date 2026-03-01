@@ -1,8 +1,3 @@
----
-hide:
-  - navigation
----
-
 # gmpp
 
 **Python package for comparing HTML parsing strategies.**

@@ -9,9 +9,6 @@ site_description: Python package for comparing HTML parsing strategies
 repo_url: https://github.com/ghxm/gmpp
 theme:
   name: openstage
-  nav_links:
-    - title: GitHub
-      url: https://github.com/ghxm/gmpp
 nav:
   - Home: index.md
   - Getting Started: getting-started.md

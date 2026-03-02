@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install "mkdocs-openstage-theme @ git+https://github.com/openstage-eu/mkdocs-openstage-theme.git" mkdocs-llmstxt
+      - run: pip install --no-cache-dir "mkdocs-openstage-theme @ git+https://github.com/openstage-eu/mkdocs-openstage-theme.git" mkdocs-llmstxt
       - run: mkdocs build --strict
       - uses: actions/upload-pages-artifact@v3
         with:
